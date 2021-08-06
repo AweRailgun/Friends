@@ -1,6 +1,6 @@
 {
   "name": "skq",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "## What is this? 这是甚么？",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "url": "https://github.com/GreenSulley/Friends/issues"
   },
   "homepage": "https://github.com/GreenSulley/Friends#readme",
-  "files":[
+  "files": [
     "links.json"
   ]
 }
