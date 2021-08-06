@@ -43,26 +43,25 @@ jobs:
         echo `date +"%Y-%m-%d %H:%M:%S"` released > build.log
 
   Publish-NPM:
-    needs: YML-2-JSON
-    name: Publish JSON
+  needs: YML-2-JSON
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+          registry-url: https://registry.npmjs.org/
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+  Git-Push:
+    needs: Publish-NPM
+    name: Git Push
     runs-on: ubuntu-latest
 
     # Npm patch version and publish
     steps:
-    - name: npm init
-      uses: actions/checkout@v2
-      uses: actions/setup-node@v1
-      with:
-        node-version: "12.x"
-        registry-url: https://registry.npmjs.org/
-
-    - name: npm patch version and publish
-      run: |
-        npm version patch
-        npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-    
     - name: git commit
       env:
         $USER_EMAIL: ${{ secrets.USER_EMAIL }}
