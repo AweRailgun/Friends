@@ -42,8 +42,14 @@ jobs:
         python generate.py
         echo `date +"%Y-%m-%d %H:%M:%S"` released > build.log
 
+  Publish-NPM:
+    needs: YML-2-JSON
+    name: Publish JSON
+    runs-on: ubuntu-latest
+
     # Npm patch version and publish
-    - name: Npm init
+    steps:
+    - name: npm init
       uses: actions/checkout@v2
       uses: actions/setup-node@v1
       with:
@@ -56,9 +62,8 @@ jobs:
         npm publish
       env:
         NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-    # Commit json into repo
-    - name: Commit
+    
+    - name: git commit
       env:
         $USER_EMAIL: ${{ secrets.USER_EMAIL }}
         $USER_NAME: ${{ secrets.USER_NAME }}
@@ -67,7 +72,8 @@ jobs:
         git config --global user.name ${{ secrets.USER_NAME }}
         git add .
         git commit -m "links(json): update YML and generate JSON successfully" -a
-    - name: Push changes
+        
+    - name: git push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets._GITHUB_TOKEN }}
