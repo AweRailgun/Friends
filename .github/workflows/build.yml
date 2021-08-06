@@ -43,7 +43,7 @@ jobs:
         echo `date +"%Y-%m-%d %H:%M:%S"` released > build.log
 
   Publish-NPM:
-  needs: YML-2-JSON
+    needs: YML-2-JSON
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
