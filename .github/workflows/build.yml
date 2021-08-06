@@ -16,7 +16,7 @@ on:
 
 jobs:
   YML-2-JSON:
-    name: Release json
+    name: Release JSON and Publish to NPM
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id  # star oneself to run
 
@@ -42,27 +42,21 @@ jobs:
         python generate.py
         echo `date +"%Y-%m-%d %H:%M:%S"` released > build.log
 
-  Publish-NPM:
-    needs: YML-2-JSON
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "12.x"
-          registry-url: https://registry.npmjs.org/
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+    # Patch npm package version and publish
+    - name: npm init
+      uses: actions/setup-node@v1
+      with:
+        node-version: "12.x"
+        registry-url: https://registry.npmjs.org/ 
+    - name: version patch and publish
+      run: |
+        npm version patch
+        npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
-  Git-Push:
-    needs: Publish-NPM
-    name: Git Push
-    runs-on: ubuntu-latest
-
-    # Npm patch version and publish
-    steps:
-    - name: git commit
+    # Commit json into repo
+    - name: Commit
       env:
         $USER_EMAIL: ${{ secrets.USER_EMAIL }}
         $USER_NAME: ${{ secrets.USER_NAME }}
@@ -71,8 +65,7 @@ jobs:
         git config --global user.name ${{ secrets.USER_NAME }}
         git add .
         git commit -m "links(json): update YML and generate JSON successfully" -a
-        
-    - name: git push changes
+    - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets._GITHUB_TOKEN }}
