@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/GreenSulley/Friends#readme",
   "files":[
-    "links.json"
+    "links.json",
+    "getlinks.js"
   ]
 }
