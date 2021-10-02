@@ -1,6 +1,6 @@
 {
   "name": "skq",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "## What is this? 这是甚么？",
   "main": "index.js",
   "scripts": {
